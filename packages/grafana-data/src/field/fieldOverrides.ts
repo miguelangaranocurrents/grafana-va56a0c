@@ -69,7 +69,9 @@ export function findNumericFieldMinMax(data: DataFrame[]): NumericRange {
                 max = 0;
               }
             }
-          } else if (!Number.isNaN(v)) {
+          } else if (typeof v === 'number' && !Number.isNaN(v)) {
+            // only real numbers count: a number field can carry non-numeric values (e.g. strings
+            // produced by reducing a text column), which would otherwise leak into the range
             if (min! > v) {
               min = v;
             }

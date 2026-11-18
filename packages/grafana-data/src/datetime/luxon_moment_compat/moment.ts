@@ -757,6 +757,13 @@ function normalizeZone(zone: string | Zone): Zone {
     return zone;
   }
 
+  const lowered = zone.toLowerCase();
+  // "default" (e.g. a dashboard saved with the default time zone) and the system zone aliases are not
+  // IANA zones; resolve them to the default zone instead of producing an invalid zone.
+  if (lowered === 'default' || lowered === 'local' || lowered === 'system' || lowered === 'browser') {
+    return Settings.defaultZone;
+  }
+
   const name = normalizeZoneName(zone);
   if (name === 'UTC') {
     return FixedOffsetZone.instance(0);
